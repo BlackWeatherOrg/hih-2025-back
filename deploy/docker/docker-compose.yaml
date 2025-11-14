@@ -1,0 +1,33 @@
+---
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_template
+    ports:
+      - '${POSTGRES_PORT:-6500}:5432'
+    restart: always
+    environment:
+      PGUSER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  application:
+    build:
+      dockerfile: deploy/docker/api.Dockerfile
+      context: ../../
+      ssh:
+        default: $SSH_AUTH_SOCK
+    container_name: template_application
+    ports:
+      - "${API_PORT:-6502}:7070"
+    volumes:
+      - ./logs:/logs
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

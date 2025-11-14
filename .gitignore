@@ -1,0 +1,16 @@
+*~
+*.py[cod]
+*.mmdb
+*.log
+__pycache__
+.pytest_cache
+.idea
+.vscode
+.DS_Store
+.DS_Store?
+.venv
+.mypy_cache
+*.pot
+**/local.yaml
+temp/
+.env

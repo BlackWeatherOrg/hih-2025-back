@@ -1,0 +1,41 @@
+---
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_template_application
+    ports:
+      - '${POSTGRES_PORT:-6500}:5432'
+    restart: always
+    environment:
+      PGUSER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  application:
+    build:
+      dockerfile: ./deploy/docker/api.Dockerfile
+      context: .
+    container_name: template_application
+    networks:
+      - default
+    ports:
+      - "${API_PORT:-6502}:7070"
+    volumes:
+      - application_data:/data
+      - application_logs:/project/logs
+    environment:
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      POETRY_VIRTUALENVS_CREATE: false
+      PYTHONPATH: "/project/app"
+    depends_on:
+      - postgres
+
+volumes:
+  application_data:
+  postgres_data:
+  application_logs:
