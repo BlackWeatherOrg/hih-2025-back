@@ -19,7 +19,7 @@ services:
     build:
       dockerfile: ./deploy/docker/api.Dockerfile
       context: .
-    container_name: template_application
+    container_name: hih-2025-back
     networks:
       - default
     ports:
