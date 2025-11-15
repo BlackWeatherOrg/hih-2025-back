@@ -1,10 +1,12 @@
 import logging
+import os.path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
 import config
 from internal.api import API_ROUTER
@@ -67,6 +69,7 @@ def create_app() -> FastAPI:
     add_middlewares(app)
     add_exception_handlers(app)
     add_routers(app)
+    app.mount('/static/apks', StaticFiles(directory=os.path.join(config.APP_DIR, '..', 'static', 'apks')), name='static')
     logging_initialize()
     metrics_initialize(app)
     return app

@@ -1,3 +1,4 @@
+import config
 from internal.dto.application import (
     ApplicationOut,
     CreateApplicationDTO,
@@ -12,10 +13,21 @@ class ApplicationService:
         self.repo = repo
 
     async def get_one(self, data: GetApplicationDTO) -> ApplicationOut:
+        application: ApplicationOut = await self.repo.get_one(data.model_dump(exclude_none=True))
+        if application.id % 2 != 0 or application.name == 'ВКонтакте: чаты, видео, музыка':
+            application.apk_link = f'{config.APK_HOSTNAME}{config.APK_PATH}vkontakte-chaty-video-muzyka.apk'
+        else:
+            application.apk_link = f'{config.APK_HOSTNAME}{config.APK_PATH}vk-video-kino-serialy-tv-i.apk'
         return await self.repo.get_one(data.model_dump(exclude_none=True))
 
     async def get_many(self, data: GetApplicationDTO) -> list[ApplicationOut]:
-        return await self.repo.get_many(data.model_dump(exclude_none=True))
+        applications: list[ApplicationOut] = await self.repo.get_many(data.model_dump(exclude_none=True))
+        for appl in applications:
+            if appl.id % 2 != 0 or appl.name == 'ВКонтакте: чаты, видео, музыка':
+                appl.apk_link = 'http://localhost:7070/api/static/apks/vkontakte-chaty-video-muzyka.apk'
+            else:
+                appl.apk_link = 'http://localhost:7070/api/static/apks/vk-video-kino-serialy-tv-i.apk'
+        return applications
 
     async def create(self, data: CreateApplicationDTO) -> ApplicationOut:
         payload = data.model_dump(exclude_none=True)

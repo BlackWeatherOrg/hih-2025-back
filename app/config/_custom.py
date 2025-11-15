@@ -8,3 +8,7 @@ POSTGRES_PORT = NotImplemented
 # CORS
 CORS_ALLOWED_HOSTS = 'http://localhost:3000'
 CORS_DOMAIN = None
+
+# APKS
+APK_HOSTNAME = 'http://localhost:7070'
+APK_PATH = '/api/static/apks/'

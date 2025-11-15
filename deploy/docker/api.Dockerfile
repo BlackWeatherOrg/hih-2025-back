@@ -20,6 +20,7 @@ RUN --mount=type=ssh poetry install
 COPY app app
 COPY alembic.ini ./
 COPY migrations migrations
+COPY static static
 RUN mkdir logs
 RUN mkdir schedules
 

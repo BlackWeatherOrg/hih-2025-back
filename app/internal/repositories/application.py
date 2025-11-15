@@ -7,12 +7,17 @@ from internal.repositories.db.models.application import Application
 class ApplicationRepository(BaseSQLAlchemyRepository):
     model = Application
 
-    async def get_many(self, data: dict):
+    async def get_many(self, data: dict) -> list:
         return_in_order = data.pop('return_in_order', None)
         offset = data.pop('offset', None)
         limit = data.pop('limit', None)
+        name_filter = data.pop('name', None)
         data = self._normalize_payload(data)
-        query = select(self.model).filter_by(**data)
+        query = select(self.model)
+        if name_filter is not None:
+            query = query.filter(self.model.name.ilike(f'%{name_filter}%'))
+        if data:
+            query = query.filter_by(**data)
         if return_in_order:
             query = query.order_by(self.model.id)
         if offset is not None:

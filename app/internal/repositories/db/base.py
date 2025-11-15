@@ -64,6 +64,7 @@ class BaseSQLAlchemyRepository(BaseDBRepository):
         return {k: cls._normalize_value(v) for k, v in data.items()}
 
     async def get_one(self, data: dict):
+        data.pop('return_in_order')
         data = self._normalize_payload(data)
         query = select(self.model).filter_by(**data)
         result = await self._execute_query(query)
