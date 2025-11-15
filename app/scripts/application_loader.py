@@ -129,7 +129,6 @@ async def _import_applications(entries: list[dict[str, Any]], update_existing: b
         try:
             existing = await repo.get_one({'name': payload['name']})
         except NotFoundError:
-            print(payload)
             await repo.create(payload)
             created += 1
             logger.info('Created application "%s"', payload['name'])
