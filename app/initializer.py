@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
+from starlette.middleware.cors import CORSMiddleware
 
 import config
 from internal.api import API_ROUTER
@@ -31,6 +32,15 @@ def add_exception_handlers(app: FastAPI):
 def add_middlewares(app: FastAPI):
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(AddHeaderMiddleware)
+    domain_regex = f"https?://.*\\.{config.CORS_DOMAIN.replace('.', '\\.')}" if config.CORS_DOMAIN is not None else None
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=config.CORS_ALLOWED_HOSTS,
+        allow_origin_regex=domain_regex,
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*'],
+    )
 
 
 @asynccontextmanager
