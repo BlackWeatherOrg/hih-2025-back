@@ -1,0 +1,29 @@
+from sqlalchemy import select
+
+from internal.repositories.db.base import BaseSQLAlchemyRepository
+from internal.repositories.db.models.application import Application
+
+
+class ApplicationRepository(BaseSQLAlchemyRepository):
+    model = Application
+
+    async def get_many(self, data: dict):
+        return_in_order = data.pop('return_in_order', None)
+        data = self._normalize_payload(data)
+        query = select(self.model).filter_by(**data)
+        if return_in_order:
+            query = query.order_by(self.model.id)
+        result = await self._execute_query(query)
+        return [item.to_dto() for item in result.scalars().all()]
+
+    async def create(self, data: dict):
+        screenshots = data.get('screenshots')
+        if screenshots is None:
+            data = {**data, 'screenshots': []}
+        return await super().create(data)
+
+    async def update(self, item_id: int, data: dict):
+        if 'screenshots' in data and data['screenshots'] is None:
+            data['screenshots'] = []
+        return await super().update(item_id, data)
+

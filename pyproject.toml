@@ -67,6 +67,7 @@ sqlalchemy = "^2.0.41"
 alembic = "^1.16.1"
 asyncpg = "^0.30.0"
 greenlet = "^3.2.3"
+alembic-postgresql-enum = "^1.8.0"
 
 [tool.poetry.group.test]
 optional=true
