@@ -1,7 +1,7 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class ApplicationCategoryEnum(StrEnum):
+class ApplicationCategoryEnum(Enum):
     interesting = 'Интересное'
     all_apps = 'Все приложения'
     finance = 'Финансы'
@@ -24,4 +24,15 @@ class ApplicationCategoryEnum(StrEnum):
     pets = 'Питомцы'
     betting = 'Ставки и лотереи'
     food = 'Еда и напитки'
+
+    @classmethod
+    def values_list(cls) -> list[str]:
+        return [e.value for e in cls]
+
+    @classmethod
+    def values_dict(cls) -> dict:
+        res = {}
+        for e in cls:
+            res[e.name] = e.value
+        return res
 

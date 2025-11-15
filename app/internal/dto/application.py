@@ -67,5 +67,7 @@ class GetApplicationDTO(BaseModel):
     category: Optional[ApplicationCategoryEnum] = None
     developer: Optional[str] = None
     editors_choice: Optional[bool] = None
+    offset: Optional[int] = None
+    limit: Optional[int] = None
     return_in_order: bool = True
 

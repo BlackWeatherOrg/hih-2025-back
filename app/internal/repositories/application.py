@@ -9,10 +9,16 @@ class ApplicationRepository(BaseSQLAlchemyRepository):
 
     async def get_many(self, data: dict):
         return_in_order = data.pop('return_in_order', None)
+        offset = data.pop('offset', None)
+        limit = data.pop('limit', None)
         data = self._normalize_payload(data)
         query = select(self.model).filter_by(**data)
         if return_in_order:
             query = query.order_by(self.model.id)
+        if offset is not None:
+            query = query.offset(offset)
+        if limit is not None:
+            query = query.limit(limit)
         result = await self._execute_query(query)
         return [item.to_dto() for item in result.scalars().all()]
 

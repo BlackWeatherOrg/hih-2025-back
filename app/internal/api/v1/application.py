@@ -2,6 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
+from internal.api.v1.schemas.response.category import CategoriesOut
+from internal.core.types import ApplicationCategoryEnum
 from internal.dependencies.application import application_service_dep
 from internal.dto.application import (
     ApplicationOut,
@@ -13,7 +15,11 @@ from internal.services.application import ApplicationService
 
 
 APPLICATION_ROUTER = APIRouter(prefix='/applications', tags=['applications'])
+CATEGORY_ROUTER = APIRouter(prefix='/categories', tags=['categories'])
 
+@CATEGORY_ROUTER.get('/get_all', response_model=CategoriesOut)
+async def get_one_application():
+    return CategoriesOut(categories=ApplicationCategoryEnum.values_list())
 
 @APPLICATION_ROUTER.get('/get_one', response_model=ApplicationOut)
 async def get_one_application(
